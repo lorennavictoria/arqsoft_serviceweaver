@@ -1,0 +1,10 @@
+ServiceWeaver/weaver
+bigwhite/experiments
+edmarfelipe/serviceweaver-example
+raissatito/weaver-excercise
+ktfth/rubico
+dvaumoron/puzzleweaver
+mafaldacf/weaver-dsb
+takkujunjieli/Emojis
+wenjinfly/new_it
+mwhittaker/calculator

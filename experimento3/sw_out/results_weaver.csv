@@ -1,0 +1,11 @@
+repo,num_go_files_scanned,num_config_files_scanned,implements_total,interfaces_total,has_any_listener_field,has_any_resource_spec,import_hits,uses_run_or_init_hits,deploy_hints,todos_found
+ServiceWeaver/weaver,376,20,140,155,True,True,286,10,"ssh,kube,gke,multi,single",True
+bigwhite/experiments,1201,165,7,117,True,False,10,3,"kube,gke,multi,single",True
+edmarfelipe/serviceweaver-example,5,1,2,2,False,False,5,1,,True
+raissatito/weaver-excercise,6,1,3,2,True,False,5,1,"multi,single",True
+ktfth/rubico,8,4,2,0,False,False,3,1,,False
+dvaumoron/puzzleweaver,76,1,14,18,True,False,37,2,,True
+mafaldacf/weaver-dsb,24,14,13,12,True,False,17,1,"single,multi,gke",True
+takkujunjieli/Emojis,10,1,6,5,True,False,8,1,"multi,single",True
+wenjinfly/new_it,99,8,4,10,False,False,14,1,,True
+mwhittaker/calculator,56,8,12,31,True,False,22,5,"kube,single",True
