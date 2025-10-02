@@ -1,0 +1,10 @@
+metric,value
+implements_total_mean,9.54
+implements_total_median,3.0
+implements_total_p90,14.0
+implements_total_max,140.0
+interfaces_total_mean,13.58
+interfaces_total_median,2.0
+interfaces_total_p90,28.0
+interfaces_total_max,155.0
+listeners_presence_pct,76.54

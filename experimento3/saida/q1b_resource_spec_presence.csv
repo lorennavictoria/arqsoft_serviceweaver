@@ -1,0 +1,5 @@
+metric,value
+resourceSpec_present_true,3.0
+resourceSpec_present_false,78.0
+total_repos,81.0
+pct_present,3.7

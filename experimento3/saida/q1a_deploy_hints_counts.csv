@@ -1,0 +1,6 @@
+hint,count,pct_repos
+single,61,75.31
+multi,50,61.73
+kube,26,32.1
+gke,16,19.75
+ssh,8,9.88

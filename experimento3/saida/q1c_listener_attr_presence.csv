@@ -1,0 +1,2 @@
+note
+"Os atributos de listener (public/hostname/address) NÃO são extraídos pelo summary/jsonl padrão. Para registrar presença real, seria preciso re-minerar os arquivos de config (weaver.toml/deployment.toml) procurando chaves `listeners.<NAME>.public`, `hostname`, `address` etc. Resultado marcado como 'unknown' neste conjunto."
