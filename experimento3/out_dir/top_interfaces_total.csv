@@ -1,0 +1,16 @@
+repo,is_weaver,interfaces_total,num_go_files_scanned,num_config_files_scanned,implements_total,import_hits,uses_run_or_init_hits
+ServiceWeaver/weaver,True,155,376,20,140,286,10
+sagoo-cloud/weaver,True,139,321,6,119,16,3
+bigwhite/experiments,True,117,1204,165,7,10,3
+TiagoMalhadas/xcweaver,True,112,302,8,97,61,1
+XCWeaver/benchmarks,True,82,184,2136,96,89,10
+sagoo-cloud/nexframe,True,57,340,2,4,2,0
+futugyou/goproject-archived,True,40,482,26,2,4,1
+XCWeaver/xcweaver,False,40,205,2,22,0,0
+mwhittaker/calculator,True,31,56,8,12,22,5
+unknowntpo/playground-2022,True,28,137,541,1,3,1
+TimLiuDream/go-test,True,28,307,10,3,9,1
+USC-NSL-DDB/socialnet-serviceweaver,True,21,27,4,14,20,1
+totoroyyb/SocialNetwork-serviceweaver,True,21,26,3,14,20,1
+dvaumoron/puzzleweaver,True,18,76,1,14,37,2
+go-swa/swa,True,15,88,4,4,30,1

@@ -1,25 +1,5 @@
 #!/usr/bin/env python3
-"""
-mine_serviceweaver.py
 
-Minera repositórios GitHub buscando usos de Service Weaver e extrai métricas estruturais e
-configurações. Agora com filtro robusto para considerar apenas repositórios que de fato
-implementam Service Weaver (is_weaver).
-
-Uso:
-  export GITHUB_TOKEN=ghp_xxx
-  python mine_serviceweaver.py --target 1500 --out ./sw_output [--strict]
-
-Saída:
-  ./sw_output/
-    repos_list.txt              # lista de repositórios coletados (candidatos)
-    repos_weaver.txt            # APENAS repositórios classificados como Service Weaver
-    progress.json               # checkpoint
-    results.jsonl               # todos os candidatos analisados
-    results_weaver.jsonl        # APENAS weaver
-    results_summary.csv         # resumo (com coluna is_weaver)
-    results_weaver.csv          # resumo apenas dos válidos
-"""
 import os
 import re
 import time
@@ -31,18 +11,15 @@ from tqdm import tqdm
 import csv
 from pathlib import Path
 
-# ---------- Buscas mais fortes (combinando termos) ----------
-# Cada item vira uma query do GitHub Code Search (AND implícito entre termos).
 SEARCH_QUERIES = [
-    # Sinais de código (import + APIs centrais)
     '"github.com/ServiceWeaver/weaver" weaver.Implements language:Go in:file',
     '"github.com/ServiceWeaver/weaver" "weaver.Listener" language:Go in:file',
     '"github.com/ServiceWeaver/weaver" weaver.Run language:Go in:file',
     '"github.com/ServiceWeaver/weaver" weaver.Init language:Go in:file',
-    # Arquivos de configuração típicos
+    
     'filename:weaver.toml in:path',
     'filename:deployment.toml weaver in:file',
-    # Reforço (casos onde só Implements aparece + Go)
+    
     'weaver.Implements language:Go in:file',
 ]
 
@@ -51,7 +28,6 @@ PER_PAGE = 100
 DEFAULT_TARGET = 1500
 OUT_DIR_DEFAULT = "sw_mining_out"
 
-# ---------- Regexes para análise de Go ----------
 RE_INTERFACE = re.compile(r'type\s+([A-Za-z0-9_]+)\s+interface\s*\{([^}]*)\}', re.MULTILINE | re.DOTALL)
 RE_WEAVER_IMPLEMENTS = re.compile(r'weaver\.Implements\s*\[\s*([^\]]+)\s*\]', re.MULTILINE)
 RE_LISTENER_FIELD = re.compile(r'\bweaver\.Listener\b')
@@ -61,11 +37,10 @@ RE_RESOURCE_SPEC = re.compile(r'ResourceSpec|resourceSpec|resource_spec', re.IGN
 RE_TODO = re.compile(r'\b(TODO|FIXME)\b', re.IGNORECASE)
 RE_DEPLOY_HINTS = re.compile(r'\b(single|multi|kube|gke|ssh)\b', re.IGNORECASE)
 
-# Arquivos de config
 CONFIG_EXTS = ('.yaml', '.yml', '.json', '.toml', '.ini')
 
-# ---------- HTTP client ----------
 class GitHubClient:
+
     def __init__(self, token: Optional[str] = None, min_sleep: float = 1.0):
         self.token = token or os.getenv("GITHUB_TOKEN")
         self.s = requests.Session()
@@ -73,6 +48,7 @@ class GitHubClient:
             self.s.headers.update({"Authorization": f"token {self.token}"})
         self.s.headers.update({"Accept": "application/vnd.github.v3+json"})
         self.min_sleep = min_sleep
+
 
     def _sleep_until_reset(self, resp):
         reset = resp.headers.get("X-RateLimit-Reset")
@@ -89,6 +65,7 @@ class GitHubClient:
             except Exception:
                 pass
 
+
     def get(self, url, params=None, raw=False):
         while True:
             resp = self.s.get(url, params=params)
@@ -103,17 +80,19 @@ class GitHubClient:
             elif resp.status_code == 404:
                 return None
             else:
-                print(f"[ERROR] GET {url} -> {resp.status_code} {resp.text[:300]}")
+                # print(f"[ERROR] GET {url} -> {resp.status_code} {resp.text[:300]}")
                 time.sleep(3)
                 continue
 
     def _sleep_short(self):
         time.sleep(self.min_sleep)
 
+
     def search_code(self, q, per_page=PER_PAGE, page=1):
         url = f"{GITHUB_API}/search/code"
         params = {"q": q, "per_page": per_page, "page": page}
         return self.get(url, params=params)
+
 
     def repo_tree_recursive(self, owner, repo, ref="HEAD"):
         url = f"{GITHUB_API}/repos/{owner}/{repo}/git/trees/{ref}"
@@ -125,6 +104,7 @@ class GitHubClient:
             return resp.json()
         return None
 
+
     def get_blob(self, owner, repo, sha):
         url = f"{GITHUB_API}/repos/{owner}/{repo}/git/blobs/{sha}"
         resp = self.get(url, raw=True)
@@ -133,6 +113,7 @@ class GitHubClient:
         if resp.status_code == 200:
             return resp.json()
         return None
+
 
     def get_file_contents(self, owner, repo, path, ref=None):
         url = f"{GITHUB_API}/repos/{owner}/{repo}/contents/{path}"
@@ -146,9 +127,9 @@ class GitHubClient:
             return resp.json()
         return None
 
-# ---------- Parsing heuristics ----------
+
+
 def analyze_go_source(content: str):
-    """Extrai métricas e sinais fortes de uso do Service Weaver no arquivo Go."""
     interfaces = []
     for m in RE_INTERFACE.finditer(content):
         name = m.group(1)
@@ -175,8 +156,8 @@ def analyze_go_source(content: str):
         "deploy_hints": list(deploy_hints),
     }
 
+
 def analyze_config_text(text: str):
-    """Heurística para configs (weaver.toml / deployment.toml)."""
     findings = {
         "listeners_key": bool(re.search(r'\blisteners\.', text, re.IGNORECASE)),
         "resource_spec": bool(RE_RESOURCE_SPEC.search(text)),
@@ -189,6 +170,7 @@ def analyze_config_text(text: str):
         findings['parse_issues'] = True
     return findings
 
+
 def decide_is_weaver(analysis: Dict, strict: bool = False) -> bool:
     """Decide se o repo realmente implementa Service Weaver."""
     import_hits = analysis.get("import_hits", 0)
@@ -196,24 +178,24 @@ def decide_is_weaver(analysis: Dict, strict: bool = False) -> bool:
     has_listener = analysis.get("has_any_listener_field", False)
     uses_run = analysis.get("uses_run_or_init_hits", 0) > 0
 
-    # Sinal de config forte: arquivo chamado weaver.toml em config_findings
     has_weaver_toml = any(
         f.get("path", "").lower().endswith("weaver.toml")
         for f in analysis.get("config_findings", [])
     )
 
-    # (default) Import + (Implements || Listener || Run/Init || weaver.toml)
+    # (default)
     if not strict:
         return (import_hits > 0) and (impls > 0 or has_listener or uses_run or has_weaver_toml)
 
-    # (strict) Import + Implements
+    # (strict)
     return (import_hits > 0) and (impls > 0)
 
-# ---------- Descoberta de repositórios ----------
+
+
 def discover_repos(client: GitHubClient, target: int) -> List[str]:
     repos: List[str] = []
     seen: Set[str] = set()
-    print("[discover] buscando repositórios via code search (consultas fortes)...")
+    print("[discover] buscando repositórios via code search...")
     for q in SEARCH_QUERIES:
         page = 1
         while True:
@@ -237,7 +219,7 @@ def discover_repos(client: GitHubClient, target: int) -> List[str]:
     print(f"[discover] descoberta completa. repos encontrados: {len(repos)}")
     return repos
 
-# ---------- Inspeção detalhada ----------
+
 def inspect_repo(client: GitHubClient, full_name: str, strict: bool) -> Dict:
     owner, repo = full_name.split('/')
     print(f"[inspect] {full_name}")
@@ -269,7 +251,7 @@ def inspect_repo(client: GitHubClient, full_name: str, strict: bool) -> Dict:
         "todos_found": False,
         "config_findings": [],
         "errors": [],
-        # novos acumuladores:
+
         "import_hits": 0,
         "uses_run_or_init_hits": 0,
     }
@@ -341,19 +323,18 @@ def inspect_repo(client: GitHubClient, full_name: str, strict: bool) -> Dict:
     analysis['is_weaver'] = decide_is_weaver(analysis, strict=strict)
     return analysis
 
-# ---------- I/O ----------
+
 def save_progress(out_dir: Path, repos_list: List[str], results_accum: List[Dict]):
     out_dir.mkdir(parents=True, exist_ok=True)
     with open(out_dir / 'repos_list.txt', 'w', encoding='utf-8') as f:
         for r in repos_list:
             f.write(r + '\n')
 
-    # todos os resultados
     with open(out_dir / 'results.jsonl', 'w', encoding='utf-8') as f:
         for rec in results_accum:
             f.write(json.dumps(rec, ensure_ascii=False) + '\n')
 
-    # apenas válidos (is_weaver)
+
     weaver_only = [r for r in results_accum if r.get('is_weaver')]
     with open(out_dir / 'results_weaver.jsonl', 'w', encoding='utf-8') as f:
         for rec in weaver_only:
@@ -363,7 +344,7 @@ def save_progress(out_dir: Path, repos_list: List[str], results_accum: List[Dict
         for r in weaver_only:
             f.write(r.get('repo', '') + '\n')
 
-    # CSV completo com coluna is_weaver
+
     with open(out_dir / 'results_summary.csv', 'w', newline='', encoding='utf-8') as csvf:
         writer = csv.writer(csvf)
         writer.writerow([
@@ -390,7 +371,7 @@ def save_progress(out_dir: Path, repos_list: List[str], results_accum: List[Dict
                 rec.get('todos_found',False),
             ])
 
-    # CSV apenas válidos
+
     with open(out_dir / 'results_weaver.csv', 'w', newline='', encoding='utf-8') as csvf:
         writer = csv.writer(csvf)
         writer.writerow([
@@ -425,7 +406,8 @@ def save_progress(out_dir: Path, repos_list: List[str], results_accum: List[Dict
     with open(out_dir / 'progress.json', 'w', encoding='utf-8') as f:
         json.dump(checkpoint, f, indent=2)
 
-# ---------- CLI ----------
+
+
 def main():
     parser = argparse.ArgumentParser(description="Miner for Service Weaver repos on GitHub (com filtro is_weaver)")
     parser.add_argument("--target", type=int, default=DEFAULT_TARGET, help="Número de repositórios para coletar")
@@ -459,7 +441,7 @@ def main():
                         pass
         print(f"[resume] loaded {len(repos)} repos and {len(results)} results")
 
-    # Descoberta
+
     if len(repos) < args.target:
         need = args.target - len(repos)
         found = discover_repos(client, need)
@@ -475,7 +457,7 @@ def main():
         for r in repos:
             f.write(r + '\n')
 
-    # Inspeção
+
     analyzed = set(rec['repo'] for rec in results)
     pbar = tqdm(repos, desc="Repos")
     for repo_full in pbar:
@@ -496,6 +478,7 @@ def main():
             save_progress(out_dir, repos, results)
             continue
     print("Done. Results saved to:", out_dir.resolve())
+
 
 if __name__ == "__main__":
     main()

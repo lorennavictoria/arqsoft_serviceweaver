@@ -1,0 +1,16 @@
+repo,is_weaver,uses_run_or_init_hits,num_go_files_scanned,num_config_files_scanned,implements_total,interfaces_total,import_hits
+ServiceWeaver/weaver,True,10,376,20,140,155,286
+XCWeaver/benchmarks,True,10,184,2136,96,82,89
+ServiceWeaver/workshops,True,10,59,9,24,14,42
+mwhittaker/calculator,True,5,56,8,12,31,22
+shijuvar/service-weaver,True,4,18,3,7,4,17
+bigwhite/experiments,True,3,1204,165,7,117,10
+katonium/articles,True,3,12,21,5,2,4
+sagoo-cloud/weaver,True,3,321,6,119,139,16
+jun3372/weaver,True,3,33,5,15,6,2
+mikepigott/service-weaver-workshops,True,3,11,0,5,2,9
+kiramishima/shining_guardian,True,2,32,1,1,3,4
+tuurGevers/GoProjects,True,2,65,3,2,1,4
+dvaumoron/puzzleweaver,True,2,76,1,14,18,37
+edmarfelipe/serviceweaver-example,True,1,5,1,2,2,5
+raissatito/weaver-excercise,True,1,6,1,3,2,5

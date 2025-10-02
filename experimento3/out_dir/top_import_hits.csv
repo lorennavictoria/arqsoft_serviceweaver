@@ -1,0 +1,16 @@
+repo,is_weaver,import_hits,num_go_files_scanned,num_config_files_scanned,implements_total,interfaces_total,uses_run_or_init_hits
+ServiceWeaver/weaver,True,286,376,20,140,155,10
+ServiceWeaver/weaver-gke,True,116,167,5,3,10,1
+XCWeaver/benchmarks,True,89,184,2136,96,82,10
+TiagoMalhadas/xcweaver,True,61,302,8,97,112,1
+ServiceWeaver/workshops,True,42,59,9,24,14,10
+dvaumoron/puzzleweaver,True,37,76,1,14,18,2
+go-swa/swa,True,30,88,4,4,15,1
+mendoncas/onlineboutique,True,28,36,88,12,11,1
+ServiceWeaver/onlineboutique,True,26,34,6,11,10,1
+DSC-HSU/codeathon_backend,True,23,41,12,6,5,1
+mwhittaker/calculator,True,22,56,8,12,31,5
+USC-NSL-DDB/socialnet-serviceweaver,True,20,27,4,14,21,1
+totoroyyb/SocialNetwork-serviceweaver,True,20,26,3,14,21,1
+ServiceWeaver/database,True,18,60,9,6,7,1
+mafaldacf/weaver-dsb,True,17,24,14,13,12,1

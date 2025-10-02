@@ -1,0 +1,15 @@
+repo,is_weaver,num_go_files_scanned,num_config_files_scanned,implements_total,interfaces_total,has_any_listener_field,has_any_resource_spec,import_hits,uses_run_or_init_hits,deploy_hints,todos_found,deploy_hints_list
+BEN00262/service-weaver-explo,False,1,0,0,0,False,False,1,1,,False,[]
+renanbastos93/boneless,False,13,2,0,0,False,False,1,0,single,True,['single']
+redviking121/resonOs,False,0,48,0,0,False,False,0,0,,False,[]
+OPEN-NEXT/LOSH-list,False,0,2095,0,0,False,False,0,0,"multi,single",True,"['multi', 'single']"
+dvaumoron/puzzletest,False,0,42,0,0,False,False,0,0,"multi,single",False,"['multi', 'single']"
+gcla/logweaver,False,7,2,0,0,False,False,0,0,ssh,False,['ssh']
+Percona-Lab/stormweaver,False,0,69,0,0,False,False,0,0,single,True,['single']
+mendoncas/granularity-evaluation,False,0,14,0,0,False,False,0,0,"multi,kube,gke,single",False,"['multi', 'kube', 'gke', 'single']"
+adv-11/python-weaver,False,0,14,0,0,False,False,0,0,single,False,['single']
+seanchatmangpt/uvmgr,False,0,208,0,0,False,False,0,0,"multi,ssh,single",True,"['multi', 'ssh', 'single']"
+satish-annigeri/MSA,False,0,6,0,0,False,False,0,0,,False,[]
+camilamedeir0s/online-boutique-service-distributions,False,0,35,0,0,False,False,0,0,"multi,kube,gke,single",False,"['multi', 'kube', 'gke', 'single']"
+pserey/monolito-vs-microsservicos,False,0,88,0,0,False,True,0,0,"multi,kube,gke,single",False,"['multi', 'kube', 'gke', 'single']"
+XCWeaver/xcweaver,False,205,2,22,40,False,False,0,0,"kube,gke,single,multi,ssh",True,"['kube', 'gke', 'single', 'multi', 'ssh']"
